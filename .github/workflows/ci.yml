@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ master, dev ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+
+      - name: Build
+        run: mvn -B clean package
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: Teleport
+          path: target/Teleport.jar
+          if-no-files-found: error

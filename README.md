@@ -2,6 +2,7 @@
 
 A clean & revised teleportation system for Paper servers — one smart `/tp` command that replaces vanilla teleporting with player requests, random teleport, coordinate and entity teleports, all styled with MiniMessage and fully configurable.
 
+[![Build](https://github.com/yapalmuffiny/Teleport/actions/workflows/ci.yml/badge.svg)](https://github.com/yapalmuffiny/Teleport/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Java 25](https://img.shields.io/badge/Java-25-orange.svg)](https://adoptium.net/)
 [![Paper](https://img.shields.io/badge/Server-Paper-blue.svg)](https://papermc.io/)
