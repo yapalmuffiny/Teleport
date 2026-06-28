@@ -1,0 +1,107 @@
+# ████████╗███████╗██╗     ███████╗██████╗  ██████╗ ██████╗ ████████╗
+# ╚══██╔══╝██╔════╝██║     ██╔════╝██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝
+#    ██║   █████╗  ██║     █████╗  ██████╔╝██║   ██║██████╔╝   ██║
+#    ██║   ██╔══╝  ██║     ██╔══╝  ██╔═══╝ ██║   ██║██╔══██╗   ██║
+#    ██║   ███████╗███████╗███████╗██║     ╚██████╔╝██║  ██║   ██║
+#    ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝
+#  A clean & revised teleportation system! ~ Created by Zero Development :)
+# =====================================================================
+#  Everything runs through a single /tp command. Toggle features below.
+#  Messages support full MiniMessage:  https://docs.advntr.dev/minimessage
+# =====================================================================
+
+features:
+  # Allow teleporting to raw coordinates:  /tp 100 64 -200
+  coordinates: true
+
+  # "Request to teleport to a player" flow (classic /tpa).
+  #   /tp <player>        -> go to them (or request, if no force permission)
+  requests: true
+
+  # "Request to bring a player to you" flow (classic /tphere).
+  #   /tp <player> me     -> bring them (or request, if no force permission)
+  summon-requests: true
+
+  # Vanilla-style entity selectors as the source of a teleport (requires the
+  # teleport.entities permission). Examples:
+  #   /tp @e[type=zombie]            -> bring all zombies to you
+  #   /tp @e[type=cow] <x> <y> <z>   -> move cows to coordinates
+  #   /tp @a <player>                -> gather everyone to a player
+  #   /tp look [destination]         -> teleport the mob you're looking at
+  entities: true
+
+requests:
+  # How long a pending request stays valid, in seconds.
+  expire-seconds: 60
+
+rtp:
+  enabled: true
+  # Distance from each world's spawn that players can be dropped at.
+  min-radius: 500
+  max-radius: 5000
+  # How many random columns to test before giving up.
+  max-attempts: 50
+  # Seconds a player must wait between random teleports.
+  cooldown-seconds: 30
+  # Which dimensions /tp random may target. Players use:  /tp random <dimension>
+  # Keys are the world (folder) names on your server.
+  dimensions:
+    world: true
+    world_nether: false
+    world_the_end: false
+
+messages:
+  prefix: "<b><dark_gray>[</dark_gray><gradient:#FFE873:#E0A100>Teleport</gradient><dark_gray>]</dark_gray></b> | "
+
+  no-permission: "<red>You don't have permission to do that."
+  player-only: "<red>Only players can use that."
+  unknown-player: "<red>Couldn't find a player named <yellow><player></yellow>."
+  self-target: "<red>You're already there — that's you!"
+  usage: "<gray>Usage: <white>/tp <player> <gray>| <white>/tp <x> <y> <z> <gray>| <white>/tp random [dimension]</gray>"
+  feature-disabled: "<red>That feature is disabled on this server."
+  reloaded: "<green>Teleport config reloaded."
+
+  # --- Direct teleports (force permission) ---
+  teleported-to-player: "<green>Whoosh! Teleported you to <yellow><player></yellow>."
+  teleported-to-coords: "<green>Teleported you to <yellow><x>, <y>, <z></yellow>."
+  teleported-player-to-player: "<green>Teleported <yellow><player></yellow> to <yellow><target></yellow>."
+  teleported-player-to-coords: "<green>Teleported <yellow><player></yellow> to <yellow><x>, <y>, <z></yellow>."
+  summoned-player: "<green>Whoosh! Teleported <yellow><player></yellow> to you."
+  you-were-teleported: "<gray>You were teleported by <yellow><player></yellow>."
+
+  # --- Block + hint (no force permission) ---
+  # Shown when a player tries to forcibly teleport TO someone.
+  cannot-force-goto: "<red>Hey! You can't forcibly teleport players."
+  cannot-force-goto-hint: "<dark_gray>  » </dark_gray><gray>Request to teleport to <white><player></white>? </gray><click:run_command:'/tp request <player>'><hover:show_text:'<green>Click to send a teleport request'><green><b>[ Send Request ]</b></green></hover></click>"
+  # Shown when a player tries to forcibly bring someone TO them.
+  cannot-force-summon: "<red>Hey! You aren't able to forcibly teleport a player."
+  cannot-force-summon-hint: "<dark_gray>  » </dark_gray><gray>Request to teleport <white><player></white> to you? </gray><click:run_command:'/tp summon <player>'><hover:show_text:'<green>Click to send a teleport request'><green><b>[ Send Request ]</b></green></hover></click>"
+
+  # --- Request lifecycle ---
+  request-sent: "<gray>Request sent to <yellow><player></yellow>. <dark_gray>(expires in <time>s)</dark_gray>"
+  request-pending-already: "<red>You already have a pending request to <yellow><player></yellow>."
+  request-received-goto: "<yellow><player></yellow> <gray>wants to teleport <white>to you<gray>."
+  request-received-summon: "<yellow><player></yellow> <gray>wants to teleport <white>you to them<gray>."
+  request-buttons: "<dark_gray>  » </dark_gray><click:run_command:'/tp accept <player>'><hover:show_text:'<green>Accept the request'><green><b>[ Accept ]</b></green></hover></click> <dark_gray>|</dark_gray> <click:run_command:'/tp deny <player>'><hover:show_text:'<red>Decline the request'><red><b>[ Decline ]</b></red></hover></click>"
+  request-none: "<red>You have no pending teleport requests."
+  request-none-from: "<red>You have no pending request from <yellow><player></yellow>."
+  request-accepted-target: "<green>Accepted <yellow><player></yellow>'s request."
+  request-accepted-sender: "<green><yellow><player></yellow> accepted your request."
+  request-denied-target: "<gray>Declined <yellow><player></yellow>'s request."
+  request-denied-sender: "<red><yellow><player></yellow> declined your request."
+  request-expired-sender: "<red>Your teleport request to <yellow><player></yellow> expired."
+
+  # --- Entity selectors / look ---
+  entities-teleported: "<green>Teleported <yellow><what></yellow> to <yellow><where></yellow>."
+  entities-none: "<red>No entities matched <yellow><selector></yellow>."
+  entities-bad-selector: "<red>Invalid selector: <yellow><selector></yellow>."
+  look-none: "<red>You're not looking at any entity."
+
+  # --- Random teleport ---
+  rtp-disabled: "<red>Random teleport is disabled."
+  rtp-dimension-disabled: "<red>Random teleport isn't allowed in <yellow><dimension></yellow>."
+  rtp-unknown-dimension: "<red>Unknown dimension <yellow><dimension></yellow>."
+  rtp-searching: "<gray>Searching for a safe spot…"
+  rtp-success: "<green>Whoosh! Dropped you <yellow><distance></yellow> blocks out in <yellow><world></yellow>."
+  rtp-failed: "<red>Couldn't find a safe spot. Please try again."
+  rtp-cooldown: "<red>You must wait <yellow><time>s</yellow> before teleporting randomly again."

@@ -1,0 +1,48 @@
+name: Teleport
+description: "A clean & revised teleportation system"
+version: '${project.version}'
+
+main: ca.zerodev.Teleport
+api-version: '26.2'
+load: POSTWORLD
+
+authors: [ Zero Development ]
+website: zerodev.ca
+
+commands:
+  tp:
+    description: Teleport to players, coordinates, or a random location.
+    usage: /tp <player|x y z|random> [args]
+    aliases: [ teleport ]
+
+permissions:
+  teleport.use:
+    description: Use the base /tp command.
+    default: true
+  teleport.coordinates:
+    description: Teleport yourself to raw coordinates.
+    default: true
+  teleport.request:
+    description: Send a request to teleport to another player.
+    default: true
+  teleport.summon:
+    description: Send a request to bring another player to you.
+    default: true
+  teleport.rtp:
+    description: Use random teleport.
+    default: true
+  teleport.rtp.dimensions:
+    description: Choose which dimension to randomly teleport into.
+    default: true
+  teleport.rtp.cooldown.bypass:
+    description: Bypass the random-teleport cooldown.
+    default: op
+  teleport.force:
+    description: Forcibly teleport players without a request (and to coordinates).
+    default: op
+  teleport.entities:
+    description: Teleport entities using vanilla-style selectors (e.g. /tp @e[type=zombie]).
+    default: op
+  teleport.reload:
+    description: Reload the Teleport configuration.
+    default: op
