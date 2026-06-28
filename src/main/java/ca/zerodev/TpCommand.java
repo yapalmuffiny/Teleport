@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static ca.zerodev.Messages.ph;
 
@@ -28,6 +30,7 @@ public final class TpCommand implements TabExecutor {
 
     private final Teleport plugin;
     private final Messages msg;
+    private final Set<UUID> rtpSearching = ConcurrentHashMap.newKeySet();
 
     public TpCommand(Teleport plugin) {
         this.plugin = plugin;
@@ -359,17 +362,22 @@ public final class TpCommand implements TabExecutor {
             return;
         }
 
+        UUID id = player.getUniqueId();
+        if (!rtpSearching.add(id)) return;
         msg.send(player, "rtp-searching");
-        Location loc = plugin.rtp().findSafe(world);
-        if (loc == null) {
-            msg.send(player, "rtp-failed");
-            return;
-        }
-        plugin.rtp().markUsed(player);
-        Location spawn = world.getSpawnLocation();
-        int distance = (int) Math.hypot(loc.getX() - spawn.getX(), loc.getZ() - spawn.getZ());
-        player.teleportAsync(loc);
-        msg.send(player, "rtp-success", ph("distance", distance), ph("world", world.getName()));
+        plugin.rtp().findSafe(world).whenComplete((loc, ex) -> {
+            rtpSearching.remove(id);
+            if (ex != null || !player.isOnline()) return;
+            if (loc == null) {
+                msg.send(player, "rtp-failed");
+                return;
+            }
+            plugin.rtp().markUsed(player);
+            Location spawn = world.getSpawnLocation();
+            int distance = (int) Math.hypot(loc.getX() - spawn.getX(), loc.getZ() - spawn.getZ());
+            player.teleportAsync(loc);
+            msg.send(player, "rtp-success", ph("distance", distance), ph("world", world.getName()));
+        });
     }
 
     private void handleReload(CommandSender sender) {
