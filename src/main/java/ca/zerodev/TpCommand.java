@@ -55,6 +55,7 @@ public final class TpCommand implements TabExecutor {
             case "summon" -> { handleSendRequest(sender, args, TeleportRequest.Type.SUMMON); return true; }
             case "accept" -> { handleResponse(sender, args, true); return true; }
             case "deny", "decline" -> { handleResponse(sender, args, false); return true; }
+            case "dismiss" -> { return true; }
             default -> { }
         }
 
@@ -131,7 +132,6 @@ public final class TpCommand implements TabExecutor {
             msg.send(player, "feature-disabled");
             return;
         }
-        msg.send(player, "cannot-force-goto");
         msg.sendButton(player, "cannot-force-goto-hint", target.getName());
     }
 
@@ -152,7 +152,6 @@ public final class TpCommand implements TabExecutor {
             msg.send(player, "feature-disabled");
             return;
         }
-        msg.send(player, "cannot-force-summon");
         msg.sendButton(player, "cannot-force-summon-hint", target.getName());
     }
 

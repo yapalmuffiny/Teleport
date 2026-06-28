@@ -39,11 +39,13 @@ public final class Messages {
     }
 
     /**
-     * Sends a message with the player name substituted directly into the text, so the name also
-     * resolves inside click commands (where MiniMessage placeholders are not expanded).
+     * Sends a prefixed message with the player name substituted directly into the text, so the name
+     * also resolves inside click commands (where MiniMessage placeholders are not expanded). The
+     * prefix is applied to each line of a multi-line ({@code <newline>}) message.
      */
     public void sendButton(CommandSender to, String key, String playerName) {
         String body = raw(key).replace("<player>", playerName);
+        body = prefix + body.replace("<newline>", "<newline>" + prefix);
         to.sendMessage(MM.deserialize(body));
     }
 

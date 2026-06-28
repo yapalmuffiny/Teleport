@@ -51,7 +51,7 @@ rtp:
     world_the_end: false
 
 messages:
-  prefix: "<b><dark_gray>[</dark_gray><gradient:#FFE873:#E0A100>Teleport</gradient><dark_gray>]</dark_gray></b> | "
+  prefix: "<b><dark_gray>[</dark_gray><gradient:#FFE873:#E0A100>Teleport</gradient><dark_gray>]</dark_gray></b><dark_gray> ┃ </dark_gray>"
 
   no-permission: "<red>You don't have permission to do that."
   player-only: "<red>Only players can use that."
@@ -69,20 +69,17 @@ messages:
   summoned-player: "<green>Whoosh! Teleported <yellow><player></yellow> to you."
   you-were-teleported: "<gray>You were teleported by <yellow><player></yellow>."
 
-  # --- Block + hint (no force permission) ---
-  # Shown when a player tries to forcibly teleport TO someone.
-  cannot-force-goto: "<red>Hey! You can't forcibly teleport players."
-  cannot-force-goto-hint: "<dark_gray>  » </dark_gray><gray>Request to teleport to <white><player></white>?</gray><newline>    <click:run_command:'/tp request <player>'><hover:show_text:'<green>Click to send a teleport request'><green><b>[ Send Request ]</b></green></hover></click>"
-  # Shown when a player tries to forcibly bring someone TO them.
-  cannot-force-summon: "<red>Hey! You aren't able to forcibly teleport a player."
-  cannot-force-summon-hint: "<dark_gray>  » </dark_gray><gray>Request to teleport <white><player></white> to you?</gray><newline>    <click:run_command:'/tp summon <player>'><hover:show_text:'<green>Click to send a teleport request'><green><b>[ Send Request ]</b></green></hover></click>"
+  # --- Request prompt (shown when you lack force permission) ---
+  # Line 1 is the question, line 2 the buttons. Decline simply dismisses (sends nothing).
+  cannot-force-goto-hint: "<gray>Teleport to <white><player></white> with a request?</gray><newline><click:run_command:'/tp request <player>'><hover:show_text:'<green>Send the request'><dark_gray>[</dark_gray><green><b> Send Request </b></green><dark_gray>]</dark_gray></hover></click>  <click:run_command:'/tp dismiss'><hover:show_text:'<red>Dismiss this prompt'><dark_gray>[</dark_gray><red><b> Decline </b></red><dark_gray>]</dark_gray></hover></click>"
+  cannot-force-summon-hint: "<gray>Bring <white><player></white> to you with a request?</gray><newline><click:run_command:'/tp summon <player>'><hover:show_text:'<green>Send the request'><dark_gray>[</dark_gray><green><b> Send Request </b></green><dark_gray>]</dark_gray></hover></click>  <click:run_command:'/tp dismiss'><hover:show_text:'<red>Dismiss this prompt'><dark_gray>[</dark_gray><red><b> Decline </b></red><dark_gray>]</dark_gray></hover></click>"
 
   # --- Request lifecycle ---
   request-sent: "<gray>Request sent to <yellow><player></yellow>. <dark_gray>(expires in <time>s)</dark_gray>"
   request-pending-already: "<red>You already have a pending request to <yellow><player></yellow>."
   request-received-goto: "<yellow><player></yellow> <gray>wants to teleport <white>to you<gray>."
   request-received-summon: "<yellow><player></yellow> <gray>wants to teleport <white>you to them<gray>."
-  request-buttons: "<dark_gray>  » </dark_gray><click:run_command:'/tp accept <player>'><hover:show_text:'<green>Accept the request'><green><b>[ Accept ]</b></green></hover></click> <dark_gray>|</dark_gray> <click:run_command:'/tp deny <player>'><hover:show_text:'<red>Decline the request'><red><b>[ Decline ]</b></red></hover></click>"
+  request-buttons: "<click:run_command:'/tp accept <player>'><hover:show_text:'<green>Accept the request'><dark_gray>[</dark_gray><green><b> Accept </b></green><dark_gray>]</dark_gray></hover></click>  <click:run_command:'/tp deny <player>'><hover:show_text:'<red>Decline the request'><dark_gray>[</dark_gray><red><b> Decline </b></red><dark_gray>]</dark_gray></hover></click>"
   request-none: "<red>You have no pending teleport requests."
   request-none-from: "<red>You have no pending request from <yellow><player></yellow>."
   request-accepted-target: "<green>Accepted <yellow><player></yellow>'s request."
