@@ -63,8 +63,6 @@ mvn clean package
 
 The compiled plugin is written to `target/Teleport.jar`. Drop it into your server's `plugins/` folder.
 
-> **Local deploy (maintainers):** the `local-deploy` Maven profile auto-copies the built jar into a server's `plugins/update/` folder. It activates only when that folder exists, so it never affects a normal clone. To use it on your own machine, point the path in the `local-deploy` profile (in `pom.xml`) at your server.
-
 ## Project structure
 
 ```
