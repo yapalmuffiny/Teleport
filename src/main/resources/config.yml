@@ -72,10 +72,10 @@ messages:
   # --- Block + hint (no force permission) ---
   # Shown when a player tries to forcibly teleport TO someone.
   cannot-force-goto: "<red>Hey! You can't forcibly teleport players."
-  cannot-force-goto-hint: "<dark_gray>  » </dark_gray><gray>Request to teleport to <white><player></white>? </gray><click:run_command:'/tp request <player>'><hover:show_text:'<green>Click to send a teleport request'><green><b>[ Send Request ]</b></green></hover></click>"
+  cannot-force-goto-hint: "<dark_gray>  » </dark_gray><gray>Request to teleport to <white><player></white>?</gray><newline>    <click:run_command:'/tp request <player>'><hover:show_text:'<green>Click to send a teleport request'><green><b>[ Send Request ]</b></green></hover></click>"
   # Shown when a player tries to forcibly bring someone TO them.
   cannot-force-summon: "<red>Hey! You aren't able to forcibly teleport a player."
-  cannot-force-summon-hint: "<dark_gray>  » </dark_gray><gray>Request to teleport <white><player></white> to you? </gray><click:run_command:'/tp summon <player>'><hover:show_text:'<green>Click to send a teleport request'><green><b>[ Send Request ]</b></green></hover></click>"
+  cannot-force-summon-hint: "<dark_gray>  » </dark_gray><gray>Request to teleport <white><player></white> to you?</gray><newline>    <click:run_command:'/tp summon <player>'><hover:show_text:'<green>Click to send a teleport request'><green><b>[ Send Request ]</b></green></hover></click>"
 
   # --- Request lifecycle ---
   request-sent: "<gray>Request sent to <yellow><player></yellow>. <dark_gray>(expires in <time>s)</dark_gray>"
