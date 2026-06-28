@@ -53,6 +53,13 @@ rtp:
 messages:
   prefix: "<b><dark_gray>[</dark_gray><gradient:#FFE873:#E0A100>Teleport</gradient><dark_gray>]</dark_gray></b><dark_gray> ┃ </dark_gray>"
 
+  # Message keys listed here are shown on the action bar (above the hotbar) instead of
+  # in chat. Console always uses chat, and clickable prompts always stay in chat.
+  # Add any of the message keys below — good candidates are short, transient confirmations.
+  action-bar:
+    - reloaded
+    - rtp-searching
+
   no-permission: "<red>You don't have permission to do that."
   player-only: "<red>Only players can use that."
   unknown-player: "<red>Couldn't find a player named <yellow><player></yellow>."

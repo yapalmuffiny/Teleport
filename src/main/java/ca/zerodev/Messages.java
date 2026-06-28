@@ -5,7 +5,10 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.intellij.lang.annotations.Subst;
+
+import java.util.Set;
 
 /**
  * Loads message strings from {@code config.yml} and renders them with MiniMessage.
@@ -16,6 +19,7 @@ public final class Messages {
 
     private final Teleport plugin;
     private String prefix = "";
+    private Set<String> actionBarKeys = Set.of();
 
     public Messages(Teleport plugin) {
         this.plugin = plugin;
@@ -24,6 +28,7 @@ public final class Messages {
 
     public void reload() {
         prefix = plugin.getConfig().getString("messages.prefix", "");
+        actionBarKeys = Set.copyOf(plugin.getConfig().getStringList("messages.action-bar"));
     }
 
     private String raw(String key) {
@@ -34,8 +39,14 @@ public final class Messages {
         return MM.deserialize(prefix + raw(key), resolvers);
     }
 
+    /** Routes to the action bar if the key is configured for it (and the target is a player), otherwise to chat. */
     public void send(CommandSender to, String key, TagResolver... resolvers) {
-        to.sendMessage(component(key, resolvers));
+        Component component = component(key, resolvers);
+        if (to instanceof Player player && actionBarKeys.contains(key)) {
+            player.sendActionBar(component);
+        } else {
+            to.sendMessage(component);
+        }
     }
 
     /**
