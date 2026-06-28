@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -45,24 +46,41 @@ public final class RtpService {
         cooldownUntil.put(player.getUniqueId(), System.currentTimeMillis() + seconds * 1000L);
     }
 
-    /** Returns a safe location to drop into within the configured radius, or {@code null} if none was found. */
-    public Location findSafe(World world) {
+    /**
+     * Searches for a safe location within the configured radius, loading candidate chunks off the
+     * main thread. The returned future completes on the server thread with a location, or
+     * {@code null} if none was found within the attempt limit.
+     */
+    public CompletableFuture<Location> findSafe(World world) {
         int min = plugin.getConfig().getInt("rtp.min-radius", 500);
         int max = plugin.getConfig().getInt("rtp.max-radius", 5000);
         int attempts = plugin.getConfig().getInt("rtp.max-attempts", 50);
         if (max < min) max = min;
 
-        Location center = world.getSpawnLocation();
-        ThreadLocalRandom rnd = ThreadLocalRandom.current();
-        for (int i = 0; i < attempts; i++) {
-            double angle = rnd.nextDouble(Math.PI * 2);
-            double dist = min + rnd.nextDouble(Math.max(1, max - min));
-            int x = (int) Math.round(center.getX() + Math.cos(angle) * dist);
-            int z = (int) Math.round(center.getZ() + Math.sin(angle) * dist);
-            Location loc = safeColumn(world, x, z);
-            if (loc != null) return loc;
+        CompletableFuture<Location> result = new CompletableFuture<>();
+        attempt(world, world.getSpawnLocation(), min, max, attempts, result);
+        return result;
+    }
+
+    private void attempt(World world, Location center, int min, int max, int remaining,
+                         CompletableFuture<Location> result) {
+        if (remaining <= 0) {
+            result.complete(null);
+            return;
         }
-        return null;
+        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+        double angle = rnd.nextDouble(Math.PI * 2);
+        double dist = min + rnd.nextDouble(Math.max(1, max - min));
+        int x = (int) Math.round(center.getX() + Math.cos(angle) * dist);
+        int z = (int) Math.round(center.getZ() + Math.sin(angle) * dist);
+        world.getChunkAtAsync(x >> 4, z >> 4).whenComplete((chunk, ex) -> {
+            Location loc = (ex == null && chunk != null) ? safeColumn(world, x, z) : null;
+            if (loc != null) {
+                result.complete(loc);
+            } else {
+                attempt(world, center, min, max, remaining - 1, result);
+            }
+        });
     }
 
     private Location safeColumn(World world, int x, int z) {
